@@ -1,8 +1,12 @@
+### AOC Specific Files
+# Input Files
+*.input
 
-### Common ide structures
+
+
+### Common IDE structures
 # Jetbrains
 .idea
 .iml
 
 /target
-

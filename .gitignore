@@ -1,0 +1,8 @@
+
+### Common ide structures
+# Jetbrains
+.idea
+.iml
+
+/target
+

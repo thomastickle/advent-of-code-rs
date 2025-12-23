@@ -1,26 +1,42 @@
 use crate::Runner;
-use std::ops::Mul;
 use std::str::FromStr;
 
 #[derive(Debug, Default)]
 pub struct BatteryPack {
-    pub battery: Vec<i32>,
+    pub battery: Vec<u64>,
 }
 
 impl BatteryPack {
-    pub fn max_joltage(&self) -> i32 {
-        let mut max_joltage = 0;
-        for i in 0..self.battery.len() {
-            let first = self.battery[i].mul(10);
-            for j in i+1..self.battery.len() {
-                let second = self.battery[j];
-                let joltage = first + second;
-                if joltage > max_joltage {
-                    max_joltage = joltage;
-                }
+    
+}
+
+impl BatteryPack {
+    /// Returns the maximum joltage that can be formed by selecting exactly `k` digits
+    /// from the battery pack while maintaining their original relative order.
+    ///
+    /// This uses a greedy monotonic stack algorithm to find the lexicographically largest
+    /// subsequence of length `k`.
+    ///
+    /// # Arguments
+    /// * `k` - The number of digits (cells) to turn on in the battery pack.
+    pub fn max_joltage(&self, k: usize) -> u64 {
+        let mut result = Vec::with_capacity(k);
+        let to_remove = self.battery.len() - k;
+        let mut removed = 0;
+
+        for &digit in &self.battery {
+            while removed < to_remove && !result.is_empty() && *result.last().unwrap() < digit {
+                result.pop();
+                removed += 1;
+            }
+            if result.len() < k {
+                result.push(digit);
+            } else {
+                removed += 1;
             }
         }
-        max_joltage
+
+        result.iter().fold(0, |acc, &d| acc * 10 + d)
     }
 }
 
@@ -29,10 +45,10 @@ impl FromStr for BatteryPack {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let first_line = s.lines().next().unwrap_or("");
-        let cells: Vec<i32> = first_line
+        let cells: Vec<u64> = first_line
             .chars()
             .filter(|c| c.is_ascii_digit())
-            .map(|c| c.to_digit(10).unwrap() as i32)
+            .map(|c| c.to_digit(10).unwrap() as u64)
             .collect();
         Ok(BatteryPack { battery: cells })
     }
@@ -57,11 +73,11 @@ impl Runner for AdventOfCode2025Day03 {
     }
 
     fn part01(&self) -> String {
-        self.battery_packs.iter().map(|bp| bp.max_joltage()).sum::<i32>().to_string()
+        self.battery_packs.iter().map(|bp| bp.max_joltage(2)).sum::<u64>().to_string()
     }
 
     fn part02(&self) -> String {
-        "0".to_string()
+        self.battery_packs.iter().map(|bp| bp.max_joltage(12)).sum::<u64>().to_string()
     }
 }
 
@@ -107,13 +123,28 @@ mod tests {
     }
 
     #[test]
-    fn test_day03_max_joltage() {
+    fn test_day03_max_2_cell_in_order_joltage() {
         let day03: AdventOfCode2025Day03 = TEST_INPUT.parse().unwrap();
-        let expected_joltages = [98, 89, 78, 92];
+        let expected_joltages: [u64; 4] = [98, 89, 78, 92];
         
         for (i, &expected) in expected_joltages.iter().enumerate() {
             assert_eq!(
-                day03.battery_packs[i].max_joltage(),
+                day03.battery_packs[i].max_joltage(2),
+                expected,
+                "Battery pack at index {} failed",
+                i
+            );
+        }
+    }
+
+    #[test]
+    fn test_day03_max_12_cell_in_order_joltage() {
+        let day03: AdventOfCode2025Day03 = TEST_INPUT.parse().unwrap();
+        let expected_joltages: [u64; 4] = [987654321111, 811111111119, 434234234278, 888911112111];
+
+        for (i, &expected) in expected_joltages.iter().enumerate() {
+            assert_eq!(
+                day03.battery_packs[i].max_joltage(12),
                 expected,
                 "Battery pack at index {} failed",
                 i

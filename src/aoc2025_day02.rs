@@ -85,11 +85,11 @@ impl AdventOfCode2025Day02 {
         Self::default()
     }
 
-    fn part01(&self) -> i64 {
+    pub fn part01(&self) -> i64 {
         self.ranges.iter().map(|r| r.sum_of_invalids()).sum()
     }
 
-    fn part02(&self) -> i64 {
+    pub fn part02(&self) -> i64 {
         self.ranges.iter().map(|r| r.sum_of_multi_invalids()).sum()
     }
 }

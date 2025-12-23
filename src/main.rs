@@ -1,6 +1,4 @@
-mod aoc2025_day02;
-
-use aoc2025_day02::{AdventOfCode2025Day02, Runner};
+use adventofcode_rs::aoc2025_day02::{AdventOfCode2025Day02, Runner};
 
 fn main() {
     let mut aoc_day02 = AdventOfCode2025Day02::new();

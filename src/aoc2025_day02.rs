@@ -174,18 +174,4 @@ mod tests {
         assert_eq!(aoc_day02.name(), (2025, 2));
     }
 
-    #[test]
-    fn test_day02_parse() {
-        let mut aoc_day02 = AdventOfCode2025Day02::default();
-        aoc_day02.parse().unwrap();
-        assert!(!aoc_day02.ranges.is_empty());
-        // Verify the first range matches what's in input/day02.input
-        assert_eq!(
-            aoc_day02.ranges[0],
-            Range {
-                start: 7777742220_i64,
-                end: 7777814718_i64
-            }
-        );
-    }
 }

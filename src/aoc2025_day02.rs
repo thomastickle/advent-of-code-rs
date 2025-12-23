@@ -66,6 +66,7 @@ where
 }
 
 use crate::Runner;
+use rayon::prelude::*;
 
 #[derive(Debug, Default)]
 pub struct AdventOfCode2025Day02 {
@@ -78,11 +79,11 @@ impl AdventOfCode2025Day02 {
     }
 
     pub fn part01(&self) -> i64 {
-        self.ranges.iter().map(|r| r.sum_of_invalids()).sum()
+        self.ranges.par_iter().map(|r| r.sum_of_invalids()).sum()
     }
 
     pub fn part02(&self) -> i64 {
-        self.ranges.iter().map(|r| r.sum_of_multi_invalids()).sum()
+        self.ranges.par_iter().map(|r| r.sum_of_multi_invalids()).sum()
     }
 }
 

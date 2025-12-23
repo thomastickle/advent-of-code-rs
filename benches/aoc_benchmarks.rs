@@ -1,5 +1,6 @@
+use adventofcode_rs::aoc2025_day02::AdventOfCode2025Day02;
+use adventofcode_rs::Runner;
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
-use adventofcode_rs::aoc2025_day02::{AdventOfCode2025Day02, Runner};
 
 fn criterion_benchmark(c: &mut Criterion) {
     let mut aoc_day02 = AdventOfCode2025Day02::new();

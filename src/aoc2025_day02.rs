@@ -48,19 +48,15 @@ where
     type Err = String;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let parts: Vec<&str> = s.split('-').collect();
-        if parts.len() != 2 {
-            return Err(format!(
-                "Invalid range format: '{}'. Expected 'start-end'",
-                s
-            ));
-        }
+        let (start_str, end_str) = s.split_once('-').ok_or_else(|| {
+            format!("Invalid range format: '{}'. Expected 'start-end'", s)
+        })?;
 
-        let start = parts[0]
+        let start = start_str
             .trim()
             .parse::<T>()
             .map_err(|e| format!("Failed to parse start value: {}", e))?;
-        let end = parts[1]
+        let end = end_str
             .trim()
             .parse::<T>()
             .map_err(|e| format!("Failed to parse end value: {}", e))?;
@@ -69,11 +65,7 @@ where
     }
 }
 
-pub trait Runner {
-    fn name(&self) -> (u32, u32);
-    fn parse(&mut self) -> Result<(), String>;
-    fn run(&self);
-}
+use crate::Runner;
 
 #[derive(Debug, Default)]
 pub struct AdventOfCode2025Day02 {
@@ -107,23 +99,12 @@ impl Runner for AdventOfCode2025Day02 {
         Ok(())
     }
 
-    fn run(&self) {
-        let (year, day) = self.name();
-        let now = std::time::Instant::now();
-        let part1_result = self.part01();
-        let part1_duration = now.elapsed();
-        println!(
-            "Advent of Code {} Day {:02} Part 1: {} ({:?})",
-            year, day, part1_result, part1_duration
-        );
+    fn part01(&self) -> String {
+        self.part01().to_string()
+    }
 
-        let now = std::time::Instant::now();
-        let part2_result = self.part02();
-        let part2_duration = now.elapsed();
-        println!(
-            "Advent of Code {} Day {:02} Part 2: {} ({:?})",
-            year, day, part2_result, part2_duration
-        );
+    fn part02(&self) -> String {
+        self.part02().to_string()
     }
 }
 
@@ -133,6 +114,7 @@ impl FromStr for AdventOfCode2025Day02 {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let ranges = s
             .split(',')
+            .filter(|s| !s.trim().is_empty())
             .map(|range_str| range_str.trim().parse::<Range<i64>>())
             .collect::<Result<Vec<_>, _>>()?;
         Ok(AdventOfCode2025Day02 { ranges })

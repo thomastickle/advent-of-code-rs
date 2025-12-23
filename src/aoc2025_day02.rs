@@ -12,21 +12,33 @@ where
     std::ops::RangeInclusive<T>: Iterator<Item=T>,
 {
     pub fn sum_of_invalids(&self) -> T {
-        let mut sum: T = T::default();
+        (self.start..=self.end)
+            .filter(|&i| {
+                let s = i.to_string();
+                let len = s.len();
+                len % 2 == 0 && s[..len / 2] == s[len / 2..]
+            })
+            .fold(T::default(), |mut acc, i| {
+                acc += i;
+                acc
+            })
+    }
 
-        for i in self.start..=self.end {
-            let i_str = i.to_string();
-            if i_str.len() % 2 == 0 {
-                let half = i_str.len() / 2;
-                if i_str[..half] == i_str[half..] {
-                    sum += i;
-                }
-            }
-        }
-        sum
+    pub fn sum_of_multi_invalids(&self) -> T {
+        (self.start..=self.end)
+            .filter(|&i| {
+                let s = i.to_string();
+                let len = s.len();
+                (1..=len / 2).any(|size| {
+                    len % size == 0 && s.as_bytes().chunks(size).all(|chunk| chunk == &s.as_bytes()[..size])
+                })
+            })
+            .fold(T::default(), |mut acc, i| {
+                acc += i;
+                acc
+            })
     }
 }
-
 
 impl<T> FromStr for Range<T>
 where
@@ -38,12 +50,19 @@ where
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let parts: Vec<&str> = s.split('-').collect();
         if parts.len() != 2 {
-            return Err(format!("Invalid range format: '{}'. Expected 'start-end'", s));
+            return Err(format!(
+                "Invalid range format: '{}'. Expected 'start-end'",
+                s
+            ));
         }
 
-        let start = parts[0].trim().parse::<T>()
+        let start = parts[0]
+            .trim()
+            .parse::<T>()
             .map_err(|e| format!("Failed to parse start value: {}", e))?;
-        let end = parts[1].trim().parse::<T>()
+        let end = parts[1]
+            .trim()
+            .parse::<T>()
             .map_err(|e| format!("Failed to parse end value: {}", e))?;
 
         Ok(Range { start, end })
@@ -66,8 +85,12 @@ impl AdventOfCode2025Day02 {
         Self::default()
     }
 
-    pub(crate) fn part01(&self) -> i64 {
+    fn part01(&self) -> i64 {
         self.ranges.iter().map(|r| r.sum_of_invalids()).sum()
+    }
+
+    fn part02(&self) -> i64 {
+        self.ranges.iter().map(|r| r.sum_of_multi_invalids()).sum()
     }
 }
 
@@ -86,23 +109,32 @@ impl Runner for AdventOfCode2025Day02 {
 
     fn run(&self) {
         let (year, day) = self.name();
-        println!("Advent of Code {} Day {:02} Part 1: {}", year, day, self.part01());
+        println!(
+            "Advent of Code {} Day {:02} Part 1: {}",
+            year,
+            day,
+            self.part01()
+        );
+        println!(
+            "Advent of Code {} Day {:02} Part 2: {}",
+            year,
+            day,
+            self.part02()
+        );
     }
 }
-
-
 
 impl FromStr for AdventOfCode2025Day02 {
     type Err = String;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let ranges = s.split(',')
+        let ranges = s
+            .split(',')
             .map(|range_str| range_str.trim().parse::<Range<i64>>())
             .collect::<Result<Vec<_>, _>>()?;
         Ok(AdventOfCode2025Day02 { ranges })
     }
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -114,8 +146,14 @@ mod tests {
 
     #[test]
     fn test_range_from_str() {
-        assert_eq!("1-2".parse::<Range<i32>>().unwrap(), Range { start: 1, end: 2 });
-        assert_eq!(" 10 - 20 ".parse::<Range<u32>>().unwrap(), Range { start: 10, end: 20 });
+        assert_eq!(
+            "1-2".parse::<Range<i32>>().unwrap(),
+            Range { start: 1, end: 2 }
+        );
+        assert_eq!(
+            " 10 - 20 ".parse::<Range<u32>>().unwrap(),
+            Range { start: 10, end: 20 }
+        );
     }
 
     #[test]
@@ -140,6 +178,12 @@ mod tests {
     }
 
     #[test]
+    fn test_day02_part02() {
+        let aoc_day02: AdventOfCode2025Day02 = TEST_INPUT.parse().unwrap();
+        assert_eq!(aoc_day02.part02(), 4174379265_i64);
+    }
+
+    #[test]
     fn test_day02_name() {
         let aoc_day02 = AdventOfCode2025Day02::default();
         assert_eq!(aoc_day02.name(), (2025, 2));
@@ -151,6 +195,12 @@ mod tests {
         aoc_day02.parse().unwrap();
         assert!(!aoc_day02.ranges.is_empty());
         // Verify the first range matches what's in input/day02.input
-        assert_eq!(aoc_day02.ranges[0], Range { start: 7777742220_i64, end: 7777814718_i64 });
+        assert_eq!(
+            aoc_day02.ranges[0],
+            Range {
+                start: 7777742220_i64,
+                end: 7777814718_i64
+            }
+        );
     }
 }

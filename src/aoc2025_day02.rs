@@ -92,7 +92,7 @@ impl Runner for AdventOfCode2025Day02 {
     }
 
     fn parse(&mut self) -> Result<(), String> {
-        let content = std::fs::read_to_string("input\\day02.input")
+        let content = std::fs::read_to_string("input/day02.input")
             .map_err(|e| format!("Failed to read input file: {}", e))?;
         let parsed: AdventOfCode2025Day02 = content.trim().parse()?;
         self.ranges = parsed.ranges;

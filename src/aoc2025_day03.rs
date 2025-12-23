@@ -14,9 +14,6 @@ impl BatteryPack {
     /// Returns the maximum joltage that can be formed by selecting exactly `k` digits
     /// from the battery pack while maintaining their original relative order.
     ///
-    /// This uses a greedy monotonic stack algorithm to find the lexicographically largest
-    /// subsequence of length `k`.
-    ///
     /// # Arguments
     /// * `k` - The number of digits (cells) to turn on in the battery pack.
     pub fn max_joltage(&self, k: usize) -> u64 {

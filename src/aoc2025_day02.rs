@@ -109,17 +109,20 @@ impl Runner for AdventOfCode2025Day02 {
 
     fn run(&self) {
         let (year, day) = self.name();
+        let now = std::time::Instant::now();
+        let part1_result = self.part01();
+        let part1_duration = now.elapsed();
         println!(
-            "Advent of Code {} Day {:02} Part 1: {}",
-            year,
-            day,
-            self.part01()
+            "Advent of Code {} Day {:02} Part 1: {} ({:?})",
+            year, day, part1_result, part1_duration
         );
+
+        let now = std::time::Instant::now();
+        let part2_result = self.part02();
+        let part2_duration = now.elapsed();
         println!(
-            "Advent of Code {} Day {:02} Part 2: {}",
-            year,
-            day,
-            self.part02()
+            "Advent of Code {} Day {:02} Part 2: {} ({:?})",
+            year, day, part2_result, part2_duration
         );
     }
 }

@@ -62,3 +62,92 @@ fn parse_args(args: &[String], runners: &[Box<dyn Runner>]) -> Vec<usize> {
 
     to_run
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    struct MockRunner {
+        day: u32,
+    }
+
+    impl Runner for MockRunner {
+        fn name(&self) -> (u32, u32) {
+            (2025, self.day)
+        }
+        fn parse(&mut self) -> Result<(), String> {
+            Ok(())
+        }
+        fn part01(&self) -> String {
+            "".to_string()
+        }
+        fn part02(&self) -> String {
+            "".to_string()
+        }
+    }
+
+    fn get_mock_runners() -> Vec<Box<dyn Runner>> {
+        vec![
+            Box::new(MockRunner { day: 1 }),
+            Box::new(MockRunner { day: 2 }),
+            Box::new(MockRunner { day: 3 }),
+        ]
+    }
+
+    #[test]
+    fn test_get_runners() {
+        let runners = get_runners();
+        assert!(!runners.is_empty());
+        // Verify names are somewhat expected (e.g., day 1 is there)
+        let (_, day) = runners[0].name();
+        assert_eq!(day, 1);
+    }
+
+    #[test]
+    fn test_parse_args_default() {
+        let runners = get_mock_runners();
+        let args = vec!["binary_name".to_string()];
+        let to_run = parse_args(&args, &runners);
+        assert_eq!(to_run, vec![2]); // Last runner index
+    }
+
+    #[test]
+    fn test_parse_args_all() {
+        let runners = get_mock_runners();
+        let args = vec!["binary_name".to_string(), "all".to_string()];
+        let to_run = parse_args(&args, &runners);
+        assert_eq!(to_run, vec![0, 1, 2]);
+    }
+
+    #[test]
+    fn test_parse_args_day_single() {
+        let runners = get_mock_runners();
+        let args = vec!["binary_name".to_string(), "day=2".to_string()];
+        let to_run = parse_args(&args, &runners);
+        assert_eq!(to_run, vec![1]);
+    }
+
+    #[test]
+    fn test_parse_args_day_multiple() {
+        let runners = get_mock_runners();
+        let args = vec!["binary_name".to_string(), "day=1,3".to_string()];
+        let to_run = parse_args(&args, &runners);
+        assert_eq!(to_run, vec![0, 2]);
+    }
+
+    #[test]
+    fn test_parse_args_day_invalid() {
+        let runners = get_mock_runners();
+        let args = vec!["binary_name".to_string(), "day=invalid,4".to_string()];
+        let to_run = parse_args(&args, &runners);
+        assert!(to_run.is_empty());
+    }
+
+    #[test]
+    fn test_parse_args_empty_runners() {
+        let runners: Vec<Box<dyn Runner>> = Vec::new();
+        let args = vec!["binary_name".to_string()];
+        let to_run = parse_args(&args, &runners);
+        assert!(to_run.is_empty());
+    }
+}

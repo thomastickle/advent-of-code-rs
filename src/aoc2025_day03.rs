@@ -56,6 +56,12 @@ pub struct AdventOfCode2025Day03 {
     pub battery_packs: Vec<BatteryPack>,
 }
 
+impl AdventOfCode2025Day03 {
+    pub fn new() -> Self {
+        Self::default()
+    }
+}
+
 impl Runner for AdventOfCode2025Day03 {
     fn name(&self) -> (u32, u32) {
         (2025, 3)

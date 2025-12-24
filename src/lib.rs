@@ -1,6 +1,7 @@
 pub mod aoc2025_day01;
 pub mod aoc2025_day02;
 pub mod aoc2025_day03;
+pub mod aoc2025_day04;
 
 pub trait Runner {
     fn name(&self) -> (u32, u32);
@@ -21,5 +22,33 @@ pub trait Runner {
         let p2 = self.part02();
         let d2 = now.elapsed();
         println!("        Part 02: {} ({:?})", p2, d2);
+    }
+}
+
+pub fn read_lines(filename: &str) -> Vec<String> {
+    std::fs::read_to_string(filename)
+        .expect("Error reading file")
+        .lines()
+        .map(String::from)
+        .collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::io::Write;
+
+    #[test]
+    fn test_read_lines() {
+        let mut path = std::env::temp_dir();
+        path.push("test_input.txt");
+        let content = "line1\nline2\nline3";
+        let mut file = std::fs::File::create(&path).unwrap();
+        file.write_all(content.as_bytes()).unwrap();
+
+        let lines = read_lines(path.to_str().unwrap());
+        assert_eq!(lines, vec!["line1", "line2", "line3"]);
+
+        std::fs::remove_file(path).unwrap();
     }
 }

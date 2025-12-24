@@ -31,6 +31,10 @@ pub struct AdventOfCode2025Day01 {
 }
 
 impl AdventOfCode2025Day01 {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
     pub fn part01(&self) -> i32 {
         const DIAL_SIZE: i32 = 100;
         self.rotations
@@ -95,7 +99,7 @@ impl FromStr for AdventOfCode2025Day01 {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let rotations = s
-            .split(|c| c == ',' || c == '\n' || c == '\r')
+            .split([',', '\n', '\r'])
             .map(|part| part.trim())
             .filter(|part| !part.is_empty())
             .map(|part| part.parse::<Rotation>())

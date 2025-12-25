@@ -24,15 +24,3 @@ jobs:
       run: cargo test --verbose
     - name: Clippy check
       run: cargo clippy -- -D warnings
-    - name: Install cargo-tarpaulin
-      uses: taiki-e/install-action@v2
-      with:
-        tool: cargo-tarpaulin
-    - name: Generate code coverage
-      run: cargo tarpaulin --verbose --out xml
-    - name: Upload to Codecov
-      uses: codecov/codecov-action@v5
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        files: ./cobertura.xml
-        fail_ci_if_error: true

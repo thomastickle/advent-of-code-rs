@@ -116,7 +116,7 @@ impl Runner for AdventOfCode2025Day04 {
     }
 
     fn parse(&mut self) -> Result<(), String> {
-        let content = std::fs::read_to_string("input/day04.input")
+        let content = std::fs::read_to_string(self.input_path())
             .map_err(|e| format!("Failed to read input file: {}", e))?;
         let parsed: AdventOfCode2025Day04 = content.parse()?;
         self.rolls = parsed.rolls;
@@ -172,5 +172,17 @@ mod tests {
         let mut aoc_day04: AdventOfCode2025Day04 = TEST_INPUT.parse().unwrap();
         let removed = AdventOfCode2025Day04::remove_rolls(&mut aoc_day04.rolls);
         assert_eq!(removed, 43);
+    }
+
+    #[test]
+    fn test_part01() {
+        let aoc_day04: AdventOfCode2025Day04 = TEST_INPUT.parse().unwrap();
+        assert_eq!(aoc_day04.part01(), "13");
+    }
+
+    #[test]
+    fn test_part02() {
+        let aoc_day04: AdventOfCode2025Day04 = TEST_INPUT.parse().unwrap();
+        assert_eq!(aoc_day04.part02(), "43");
     }
 }

@@ -78,7 +78,7 @@ impl Runner for AdventOfCode2025Day01 {
     }
 
     fn parse(&mut self) -> Result<(), String> {
-        let content = std::fs::read_to_string("input/day01.input")
+        let content = std::fs::read_to_string(self.input_path())
             .map_err(|e| format!("Failed to read input file: {}", e))?;
         let parsed: AdventOfCode2025Day01 = content.trim().parse()?;
         self.rotations = parsed.rotations;
@@ -141,6 +141,18 @@ mod tests {
 
     #[test]
     fn test_day01_part02() {
+        let day01: AdventOfCode2025Day01 = TEST_INPUT.parse().unwrap();
+        assert_eq!(day01.part02(), 6);
+    }
+
+    #[test]
+    fn test_part01() {
+        let day01: AdventOfCode2025Day01 = TEST_INPUT.parse().unwrap();
+        assert_eq!(day01.part01(), 3);
+    }
+
+    #[test]
+    fn test_part02() {
         let day01: AdventOfCode2025Day01 = TEST_INPUT.parse().unwrap();
         assert_eq!(day01.part02(), 6);
     }

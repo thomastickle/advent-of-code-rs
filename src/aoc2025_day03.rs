@@ -68,7 +68,7 @@ impl Runner for AdventOfCode2025Day03 {
     }
 
     fn parse(&mut self) -> Result<(), String> {
-        let content = std::fs::read_to_string("input/day03.input")
+        let content = std::fs::read_to_string(self.input_path())
             .map_err(|e| format!("Failed to read input file: {}", e))?;
         let parsed: AdventOfCode2025Day03 = content.parse()?;
         self.battery_packs = parsed.battery_packs;
@@ -153,5 +153,17 @@ mod tests {
                 i
             );
         }
+    }
+
+    #[test]
+    fn test_part01() {
+        let day03: AdventOfCode2025Day03 = TEST_INPUT.parse().unwrap();
+        assert_eq!(day03.part01(), "357");
+    }
+
+    #[test]
+    fn test_part02() {
+        let day03: AdventOfCode2025Day03 = TEST_INPUT.parse().unwrap();
+        assert_eq!(day03.part02(), "3121910778619");
     }
 }

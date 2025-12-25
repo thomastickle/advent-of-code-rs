@@ -9,6 +9,11 @@ pub trait Runner {
     fn part01(&self) -> String;
     fn part02(&self) -> String;
 
+    fn input_path(&self) -> String {
+        let (_, day) = self.name();
+        format!("input/day{:02}.input", day)
+    }
+
     fn run(&self) {
         let (_, day) = self.name();
         println!("    Day {:02}", day);

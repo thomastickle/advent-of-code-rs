@@ -93,7 +93,7 @@ impl Runner for AdventOfCode2025Day02 {
     }
 
     fn parse(&mut self) -> Result<(), String> {
-        let content = std::fs::read_to_string("input/day02.input")
+        let content = std::fs::read_to_string(self.input_path())
             .map_err(|e| format!("Failed to read input file: {}", e))?;
         let parsed: AdventOfCode2025Day02 = content.trim().parse()?;
         self.ranges = parsed.ranges;
@@ -173,6 +173,18 @@ mod tests {
     fn test_day02_name() {
         let aoc_day02 = AdventOfCode2025Day02::default();
         assert_eq!(aoc_day02.name(), (2025, 2));
+    }
+
+    #[test]
+    fn test_part01() {
+        let aoc_day02: AdventOfCode2025Day02 = TEST_INPUT.parse().unwrap();
+        assert_eq!(aoc_day02.part01(), 1227775554_i64);
+    }
+
+    #[test]
+    fn test_part02() {
+        let aoc_day02: AdventOfCode2025Day02 = TEST_INPUT.parse().unwrap();
+        assert_eq!(aoc_day02.part02(), 4174379265_i64);
     }
 
 }

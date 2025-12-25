@@ -2,6 +2,7 @@ use adventofcode_rs::aoc2025_day01::AdventOfCode2025Day01;
 use adventofcode_rs::aoc2025_day02::AdventOfCode2025Day02;
 use adventofcode_rs::aoc2025_day03::AdventOfCode2025Day03;
 use adventofcode_rs::aoc2025_day04::AdventOfCode2025Day04;
+use adventofcode_rs::aoc2025_day05::AdventOfCode2025Day05;
 use adventofcode_rs::Runner;
 use std::env;
 
@@ -29,6 +30,7 @@ fn get_runners() -> Vec<Box<dyn Runner>> {
         Box::new(AdventOfCode2025Day02::new()),
         Box::new(AdventOfCode2025Day03::new()),
         Box::new(AdventOfCode2025Day04::new()),
+        Box::new(AdventOfCode2025Day05::new()),
     ]
 }
 

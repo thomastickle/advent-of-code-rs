@@ -2,6 +2,7 @@ pub mod aoc2025_day01;
 pub mod aoc2025_day02;
 pub mod aoc2025_day03;
 pub mod aoc2025_day04;
+pub mod aoc2025_day05;
 
 pub trait Runner {
     fn name(&self) -> (u32, u32);

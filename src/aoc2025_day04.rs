@@ -24,9 +24,12 @@ impl AdventOfCode2025Day04 {
         Self::default()
     }
 
-    fn get_removable_rolls(&self) -> Vec<(i32, i32)> {
+    /// Counts how many rolls have fewer than 4 neighbors.
+    /// This is used for Part 1 to identify which rolls would be removed in the first pass
+    /// without actually modifying the collection.
+    fn count_removable_rolls(&self) -> i32 {
         const MAX_NEIGHBORS: i32 = 4;
-        let mut removed_rolls: Vec<(i32, i32)> = Vec::new();
+        let mut count = 0;
         for (r_x, r_y) in self.rolls.iter() {
             let mut neighbor_count = 0;
             for (d_x, d_y) in Self::DIRECTIONS.iter() {
@@ -36,31 +39,59 @@ impl AdventOfCode2025Day04 {
                 }
             }
             if neighbor_count < MAX_NEIGHBORS {
-                removed_rolls.push((*r_x, *r_y));
+                count += 1;
             }
         }
-        removed_rolls
+        count
     }
 
-    fn remove_rolls(&mut self, all_possible: bool) -> i32 {
+    /// Removes rolls that have fewer than 4 neighbors iteratively until the collection stabilizes.
+    ///
+    /// # Arguments
+    /// * `rolls` - The mutable collection of roll coordinates.
+    fn remove_rolls(rolls: &mut HashSet<(i32, i32)>) -> i32 {
+        const MAX_NEIGHBORS: i32 = 4;
+        let mut removed_count = 0;
 
-        let mut removed_rolls_count = 0;
-        let mut finished = false;
+        // Iterative removal until stable
+        let mut to_check: Vec<(i32, i32)> = rolls.iter().cloned().collect();
+        
+        while !to_check.is_empty() {
+            let mut next_to_check = HashSet::new();
+            let mut removable = Vec::new();
 
-        while !finished {
-            let removable_rolls = self.get_removable_rolls();
-            removed_rolls_count += removable_rolls.len() as i32;
-
-            if removable_rolls.is_empty() || !all_possible {
-                finished = true;
+            for roll in to_check {
+                let mut neighbor_count = 0;
+                for (d_x, d_y) in Self::DIRECTIONS.iter() {
+                    if rolls.contains(&(roll.0 + d_x, roll.1 + d_y)) {
+                        neighbor_count += 1;
+                    }
+                }
+                if neighbor_count < MAX_NEIGHBORS {
+                    removable.push(roll);
+                }
             }
 
-            for roll in removable_rolls {
-                self.rolls.remove(&roll);
+            if removable.is_empty() {
+                break;
             }
+
+            for roll in removable {
+                if rolls.remove(&roll) {
+                    removed_count += 1;
+                    // When a roll is removed, its neighbors need to be re-checked
+                    for (d_x, d_y) in Self::DIRECTIONS.iter() {
+                        let neighbor = (roll.0 + d_x, roll.1 + d_y);
+                        if rolls.contains(&neighbor) {
+                            next_to_check.insert(neighbor);
+                        }
+                    }
+                }
+            }
+            to_check = next_to_check.into_iter().collect();
         }
 
-        removed_rolls_count
+        removed_count
     }
 }
 
@@ -93,24 +124,13 @@ impl Runner for AdventOfCode2025Day04 {
     }
 
     fn part01(&self) -> String {
-        let mut clone = AdventOfCode2025Day04 {
-            rolls: self.rolls.clone(),
-        };
-        clone.remove_rolls(false).to_string()
+        self.count_removable_rolls().to_string()
     }
     fn part02(&self) -> String {
-        let mut clone = AdventOfCode2025Day04 {
-            rolls: self.rolls.clone(),
-        };
-        clone.remove_rolls(true).to_string()
+        let mut rolls_clone = self.rolls.clone();
+        Self::remove_rolls(&mut rolls_clone).to_string()
     }
 
-    fn run(&self) {
-        let (_, day) = self.name();
-        println!("    Day {:02}", day);
-        println!("        Part 01: {}", self.part01());
-        println!("        Part 02: {}", self.part02());
-    }
 }
 
 #[cfg(test)]
@@ -142,15 +162,15 @@ mod tests {
 
     #[test]
     fn test_remove_rolls() {
-        let mut aoc_day04: AdventOfCode2025Day04 = TEST_INPUT.parse().unwrap();
-        let removed = aoc_day04.remove_rolls(false);
+        let aoc_day04: AdventOfCode2025Day04 = TEST_INPUT.parse().unwrap();
+        let removed = aoc_day04.count_removable_rolls();
         assert_eq!(removed, 13);
     }
 
     #[test]
     fn test_remove_rolls_all() {
         let mut aoc_day04: AdventOfCode2025Day04 = TEST_INPUT.parse().unwrap();
-        let removed = aoc_day04.remove_rolls(true);
+        let removed = AdventOfCode2025Day04::remove_rolls(&mut aoc_day04.rolls);
         assert_eq!(removed, 43);
     }
 }

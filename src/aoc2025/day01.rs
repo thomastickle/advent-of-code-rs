@@ -10,7 +10,7 @@ enum Direction {
 }
 
 #[derive(Debug)]
-struct AdventOfCode2025Day01 {
+pub struct AdventOfCode2025Day01 {
     directions: Vec<Direction>,
 }
 

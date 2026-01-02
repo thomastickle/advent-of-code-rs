@@ -192,14 +192,14 @@ impl Runner for AdventOfCode2025Day02 {
 
     fn part01(&self) -> Self::Output {
         self.ranges
-            .par_iter()
+            .iter()
             .map(|r| r.sum_of_invalids_fast())
             .sum()
     }
 
     fn part02(&self) -> Self::Output {
         self.ranges
-            .par_iter()
+            .iter()
             .map(|r| r.sum_of_multi_invalids_fast())
             .sum()
     }

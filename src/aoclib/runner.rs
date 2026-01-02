@@ -4,7 +4,7 @@ use std::str::FromStr;
 pub trait Runner: FromStr {
     type Output: std::fmt::Display;
 
-    /// Get the expected input path for input file of a particular Runner.
+    /// Get the expected input path for the input file of a particular Runner.
     fn input_path(&self) -> String {
         let (_, day) = self.name();
         format!("input/day{:02}.input", day)
@@ -30,7 +30,7 @@ pub trait Runner: FromStr {
         let part2_duration = start_time.elapsed() - parse_duration - part1_duration;
 
         format!(
-            "Day {:02} Results:\n  Parse: [{:?}]\n, Part 01: {} [{:?}]\n  Part 02: {} [{:?}]",
+            "Day {:02} Results:\n\tParse: [{:?}]\n\tPart 01: {} [{:?}]\n\tPart 02: {} [{:?}]",
             self.name().1,
             parse_duration,
             part1_result,
@@ -39,4 +39,15 @@ pub trait Runner: FromStr {
             part2_duration
         )
     }
+}
+
+pub trait AocDay {
+    fn run_day(&self) -> String;
+}
+
+impl <T:Runner> AocDay for T {
+    fn run_day(&self) -> String {
+        self.run()
+    }
+
 }

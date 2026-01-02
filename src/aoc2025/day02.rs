@@ -1,0 +1,171 @@
+use crate::aoclib::runner::Runner;
+use rayon::iter::ParallelIterator;
+use rayon::prelude::IntoParallelRefIterator;
+use std::str::FromStr;
+
+#[derive(Debug, PartialEq, Default)]
+pub struct Range<T> {
+    pub start: T,
+    pub end: T,
+}
+
+impl<T> Range<T>
+where
+    T: std::ops::AddAssign + Default + Copy + std::fmt::Display,
+    std::ops::RangeInclusive<T>: Iterator<Item=T>,
+{
+    pub fn sum_of_invalids(&self) -> T {
+        (self.start..=self.end)
+            .filter(|&i| {
+                let s = i.to_string();
+                let len = s.len();
+                len % 2 == 0 && s[..len / 2] == s[len / 2..]
+            })
+            .fold(T::default(), |mut acc, i| {
+                acc += i;
+                acc
+            })
+    }
+
+    pub fn sum_of_multi_invalids(&self) -> T {
+        (self.start..=self.end)
+            .filter(|&i| {
+                let s = i.to_string();
+                let len = s.len();
+                (1..=len / 2).any(|size| {
+                    len % size == 0 && s.as_bytes().chunks(size).all(|chunk| chunk == &s.as_bytes()[..size])
+                })
+            })
+            .fold(T::default(), |mut acc, i| {
+                acc += i;
+                acc
+            })
+    }
+}
+
+impl<T> FromStr for Range<T>
+where
+    T: FromStr,
+    <T as FromStr>::Err: std::fmt::Display,
+{
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let (start_str, end_str) = s.split_once('-').ok_or_else(|| {
+            format!("Invalid range format: '{}'. Expected 'start-end'", s)
+        })?;
+
+        let start = start_str
+            .trim()
+            .parse::<T>()
+            .map_err(|e| format!("Failed to parse start value: {}", e))?;
+        let end = end_str
+            .trim()
+            .parse::<T>()
+            .map_err(|e| format!("Failed to parse end value: {}", e))?;
+
+        Ok(Range { start, end })
+    }
+}
+
+#[derive(Debug)]
+pub struct AdventOfCode2025Day02 {
+    ranges: Vec<Range<u64>>,
+}
+
+impl FromStr for AdventOfCode2025Day02 {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let ranges = s
+            .split(',')
+            .filter(|s| !s.trim().is_empty())
+            .map(|range_str| range_str.trim().parse::<Range<u64>>())
+            .collect::<Result<Vec<_>, _>>()?;
+        Ok(AdventOfCode2025Day02 { ranges })
+    }
+}
+
+impl Runner for AdventOfCode2025Day02 {
+    type Output = u64;
+
+    fn name(&self) -> (u32, u32) {
+        (2025, 2)
+    }
+
+    fn new() -> Self {
+        AdventOfCode2025Day02 { ranges: vec![] }
+    }
+
+    fn parse(&self, input: &str) -> Self {
+        input
+            .parse::<AdventOfCode2025Day02>()
+            .unwrap_or_else(|e| panic!("Failed to parse input: {}", e))
+    }
+
+    fn part01(&self) -> Self::Output {
+        self.ranges.par_iter().map(|r| r.sum_of_invalids()).sum()
+    }
+
+    fn part02(&self) -> Self::Output {
+        self.ranges.par_iter().map(|r| r.sum_of_multi_invalids()).sum()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::aoc2025::day02::{AdventOfCode2025Day02, Range};
+    use crate::aoclib::runner::Runner;
+
+    const TEST_INPUT: &str = "11-22,95-115,998-1012,1188511880-1188511890,222220-222224,1698522-1698528,446443-446449,38593856-38593862,565653-565659,824824821-824824827,2121212118-2121212124";
+
+    #[test]
+    fn test_range_from_str() {
+        assert_eq!(
+            "1-2".parse::<Range<i32>>().unwrap(),
+            Range { start: 1, end: 2 }
+        );
+        assert_eq!(
+            " 10 - 20 ".parse::<Range<u32>>().unwrap(),
+            Range { start: 10, end: 20 }
+        );
+
+        assert!("1-a".parse::<Range<i32>>().is_err());
+        assert!("1".parse::<Range<i32>>().is_err());
+        assert!("1-2-3".parse::<Range<i32>>().is_err());
+        assert!("".parse::<Range<i32>>().is_err());
+    }
+
+    #[test]
+    fn test_range_sum_of_invalids() {
+        let first_range_str = TEST_INPUT.split(',').next().unwrap();
+        let range: Range<i32> = first_range_str.parse().unwrap();
+        assert_eq!(range.sum_of_invalids(), 33);
+    }
+
+    #[test]
+    fn test_name() {
+        let day02 = AdventOfCode2025Day02::new();
+        assert_eq!((2025, 2), day02.name());
+    }
+
+    #[test]
+    fn test_parse() {
+        let day01 = AdventOfCode2025Day02::new();
+        let parsed = day01.parse(TEST_INPUT);
+        parsed.ranges.iter().for_each(|r| println!("{:?}", r));
+        assert_eq!(11, parsed.ranges.len());
+    }
+
+    #[test]
+    fn test_part01() {
+        let day02 = TEST_INPUT.parse::<AdventOfCode2025Day02>().unwrap();
+        assert_eq!(1227775554, day02.part01());
+    }
+
+    #[test]
+    fn test_part02() {
+        let day02 = TEST_INPUT.parse::<AdventOfCode2025Day02>().unwrap();
+        assert_eq!(4174379265, day02.part02());
+    }
+}

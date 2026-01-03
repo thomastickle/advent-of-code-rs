@@ -9,7 +9,6 @@ pub struct AdventOfCode2025Day04 {
     active_coords: Vec<(i32, i32)>,
 }
 
-
 impl AdventOfCode2025Day04 {
     const DIRECTIONS: [(i32, i32); 8] = [
         (-1, -1),
@@ -47,21 +46,21 @@ impl AdventOfCode2025Day04 {
             .count() as i32
     }
 
-    fn remove_rolls(
-        grid: &mut Vec<bool>,
-        width: i32,
-        height: i32,
-        active: &[(i32, i32)],
-    ) -> i32 {
+    fn remove_rolls(grid: &mut Vec<bool>, width: i32, height: i32, active: &[(i32, i32)]) -> i32 {
         let mut removed_count = 0;
         let mut to_check: Vec<(i32, i32)> = active.to_vec();
+        // Track which cells are already in the next queue to avoid duplicates
+        let mut is_queued = vec![false; (width * height) as usize];
 
         while !to_check.is_empty() {
             let mut removable = Vec::new();
-            let mut next_to_check = std::collections::HashSet::new();
+            let mut next_to_check = Vec::new();
 
             for (x, y) in to_check {
-                if !grid[(y * width + x) as usize] { continue; }
+                let idx = (y * width + x) as usize;
+                if !grid[idx] {
+                    continue;
+                }
 
                 let mut neighbor_count = 0;
                 for (dx, dy) in Self::DIRECTIONS.iter() {
@@ -70,6 +69,9 @@ impl AdventOfCode2025Day04 {
                     if nx >= 0 && nx < width && ny >= 0 && ny < height {
                         if grid[(ny * width + nx) as usize] {
                             neighbor_count += 1;
+                            if neighbor_count >= Self::MAX_NEIGHBORS {
+                                break;
+                            }
                         }
                     }
                 }
@@ -79,30 +81,40 @@ impl AdventOfCode2025Day04 {
                 }
             }
 
-            if removable.is_empty() { break; }
+            if removable.is_empty() {
+                break;
+            }
 
             for (x, y) in removable {
-                if grid[(y * width + x) as usize] {
-                    grid[(y * width + x) as usize] = false;
+                let idx = (y * width + x) as usize;
+                if grid[idx] {
+                    grid[idx] = false;
                     removed_count += 1;
+
                     for (dx, dy) in Self::DIRECTIONS.iter() {
                         let nx = x + dx;
                         let ny = y + dy;
                         if nx >= 0 && nx < width && ny >= 0 && ny < height {
-                            if grid[(ny * width + nx) as usize] {
-                                next_to_check.insert((nx, ny));
+                            let n_idx = (ny * width + nx) as usize;
+                            // Only add to queue if it's a roll AND not already queued
+                            if grid[n_idx] && !is_queued[n_idx] {
+                                is_queued[n_idx] = true;
+                                next_to_check.push((nx, ny));
                             }
                         }
                     }
                 }
             }
-            to_check = next_to_check.into_iter().collect();
+
+            // Clear the dirty bits for the next round
+            for &(cx, cy) in &next_to_check {
+                is_queued[(cy * width + cx) as usize] = false;
+            }
+            to_check = next_to_check;
         }
         removed_count
     }
 }
-
-
 
 impl FromStr for AdventOfCode2025Day04 {
     type Err = String;
@@ -122,7 +134,12 @@ impl FromStr for AdventOfCode2025Day04 {
                 }
             }
         }
-        Ok(AdventOfCode2025Day04 { rolls, width, height, active_coords })
+        Ok(AdventOfCode2025Day04 {
+            rolls,
+            width,
+            height,
+            active_coords,
+        })
     }
 }
 
@@ -140,7 +157,12 @@ impl Runner for AdventOfCode2025Day04 {
     fn part02(&self) -> Self::Output {
         let mut rolls_clone = self.rolls.clone();
 
-        Self::remove_rolls(&mut rolls_clone, self.width, self.height, &self.active_coords)
+        Self::remove_rolls(
+            &mut rolls_clone,
+            self.width,
+            self.height,
+            &self.active_coords,
+        )
     }
 }
 
@@ -160,7 +182,6 @@ pub mod tests {
         .@@@@@@@@.\n\
         @.@.@@@.@.\n";
 
-
     #[test]
     fn test_day04_from_str() {
         let day04: AdventOfCode2025Day04 = TEST_INPUT.parse().unwrap();
@@ -176,14 +197,14 @@ pub mod tests {
         // "..@@.@@@@." -> First line
         assert!(!is_set(0, 0)); // '.'
         assert!(!is_set(1, 0)); // '.'
-        assert!(is_set(2, 0));  // '@'
-        assert!(is_set(3, 0));  // '@'
+        assert!(is_set(2, 0)); // '@'
+        assert!(is_set(3, 0)); // '@'
         assert!(!is_set(4, 0)); // '.'
 
         // Check a bit of the second line "@@@.@.@.@@"
-        assert!(is_set(0, 1));  // '@'
-        assert!(is_set(1, 1));  // '@'
-        assert!(is_set(2, 1));  // '@'
+        assert!(is_set(0, 1)); // '@'
+        assert!(is_set(1, 1)); // '@'
+        assert!(is_set(2, 1)); // '@'
         assert!(!is_set(3, 1)); // '.'
 
         // Verify active_coords contains the expected number of '@' symbols

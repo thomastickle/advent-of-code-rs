@@ -48,7 +48,7 @@ impl FromStr for BatteryPack {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct AdventOfCode2025Day03 {
     battery_packs: Vec<BatteryPack>,
 }
@@ -72,10 +72,6 @@ impl Runner for AdventOfCode2025Day03 {
 
     fn name(&self) -> (u32, u32) {
         (2025, 03)
-    }
-
-    fn new() -> Self {
-        AdventOfCode2025Day03 { battery_packs: vec![] }
     }
 
     fn parse(&self, input: &str) -> Self {
@@ -129,13 +125,13 @@ mod tests {
 
     #[test]
     fn test_name() {
-        let x = AdventOfCode2025Day03::new().name();
+        let x = AdventOfCode2025Day03::default().name();
         assert_eq!((2025, 03), x);
     }
 
     #[test]
     fn test_parse() {
-        let day03 = AdventOfCode2025Day03::new();
+        let day03 = AdventOfCode2025Day03::default();
         let parsed = day03.parse(TEST_INPUT);
         assert_eq!(4, parsed.battery_packs.len());
         assert_eq!(15, parsed.battery_packs[0].battery.len());

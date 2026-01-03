@@ -9,7 +9,7 @@ enum Direction {
     Right(i32),
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct AdventOfCode2025Day01 {
     directions: Vec<Direction>,
 }
@@ -48,10 +48,6 @@ impl Runner for AdventOfCode2025Day01 {
 
     fn name(&self) -> (u32, u32) {
         (2025, 1)
-    }
-
-    fn new() -> Self {
-        AdventOfCode2025Day01 { directions: vec![] }
     }
 
     fn parse(&self, input: &str) -> Self {
@@ -123,7 +119,7 @@ L82";
 
     #[test]
     fn test_parse() {
-        let day01 = AdventOfCode2025Day01::new();
+        let day01 = AdventOfCode2025Day01::default();
         let parsed = day01.parse(TEST_INPUT);
         assert_eq!(10, parsed.directions.len());
     }
@@ -146,8 +142,4 @@ L82";
         assert_eq!(6, day01.part02());
     }
 
-    #[test]
-    fn name() {
-        assert_eq!((2025, 1), AdventOfCode2025Day01::new().name());
-    }
 }

@@ -1,6 +1,4 @@
 use crate::aoclib::runner::Runner;
-use rayon::iter::ParallelIterator;
-use rayon::prelude::IntoParallelRefIterator;
 use std::collections::BTreeSet;
 use std::str::FromStr;
 
@@ -155,7 +153,7 @@ impl FromStr for Range {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct AdventOfCode2025Day02 {
     ranges: Vec<Range>,
 }
@@ -178,10 +176,6 @@ impl Runner for AdventOfCode2025Day02 {
 
     fn name(&self) -> (u32, u32) {
         (2025, 2)
-    }
-
-    fn new() -> Self {
-        AdventOfCode2025Day02 { ranges: vec![] }
     }
 
     fn parse(&self, input: &str) -> Self {
@@ -235,13 +229,13 @@ mod tests {
 
     #[test]
     fn test_name() {
-        let day02 = AdventOfCode2025Day02::new();
+        let day02 = AdventOfCode2025Day02::default();
         assert_eq!((2025, 2), day02.name());
     }
 
     #[test]
     fn test_parse() {
-        let day01 = AdventOfCode2025Day02::new();
+        let day01 = AdventOfCode2025Day02::default();
         let parsed = day01.parse(TEST_INPUT);
         parsed.ranges.iter().for_each(|r| println!("{:?}", r));
         assert_eq!(11, parsed.ranges.len());

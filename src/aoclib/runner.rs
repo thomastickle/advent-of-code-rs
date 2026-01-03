@@ -11,7 +11,6 @@ pub trait Runner: FromStr {
     }
 
     fn name(&self) -> (u32, u32);
-    fn new() -> Self;
     fn parse(&self, input: &str) -> Self;
     fn part01(&self) -> Self::Output;
     fn part02(&self) -> Self::Output;

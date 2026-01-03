@@ -178,12 +178,6 @@ impl Runner for AdventOfCode2025Day02 {
         (2025, 2)
     }
 
-    fn parse(&self, input: &str) -> Self {
-        input
-            .parse::<AdventOfCode2025Day02>()
-            .unwrap_or_else(|e| panic!("Failed to parse input: {}", e))
-    }
-
     fn part01(&self) -> Self::Output {
         self.ranges
             .iter()
@@ -231,14 +225,6 @@ mod tests {
     fn test_name() {
         let day02 = AdventOfCode2025Day02::default();
         assert_eq!((2025, 2), day02.name());
-    }
-
-    #[test]
-    fn test_parse() {
-        let day01 = AdventOfCode2025Day02::default();
-        let parsed = day01.parse(TEST_INPUT);
-        parsed.ranges.iter().for_each(|r| println!("{:?}", r));
-        assert_eq!(11, parsed.ranges.len());
     }
 
     #[test]

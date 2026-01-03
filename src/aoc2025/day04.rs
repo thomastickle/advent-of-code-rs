@@ -133,10 +133,6 @@ impl Runner for AdventOfCode2025Day04 {
         (2025, 04)
     }
 
-    fn parse(&self, input: &str) -> Self {
-        input.parse().unwrap_or_else(|e| panic!("Failed to parse input: {}", e))
-    }
-
     fn part01(&self) -> Self::Output {
         self.count_removable_rolls()
     }
@@ -163,29 +159,41 @@ pub mod tests {
         @.@@@.@@@@\n\
         .@@@@@@@@.\n\
         @.@.@@@.@.\n";
-    
 
-    // #[test]
-    // fn test_day04_from_str() {
-    //     let aoc_day04: AdventOfCode2025Day04 = TEST_INPUT.parse().unwrap();
-    //
-    //     assert!(aoc_day04.rolls.contains(&(2, 0)));
-    //     assert!(aoc_day04.rolls.contains(&(3, 0)));
-    //     assert!(!aoc_day04.rolls.contains(&(0, 0)));
-    //     assert!(!aoc_day04.rolls.contains(&(1, 0)));
-    //     assert!(aoc_day04.rolls.contains(&(2, 1)));
-    // }
-    //
-    // #[test]
-    // fn test_day04_parse() {
-    //     let day04: AdventOfCode2025Day04 = AdventOfCode2025Day04::new().parse(TEST_INPUT);
-    //
-    //     assert!(day04.rolls.contains(&(2, 0)));
-    //     assert!(day04.rolls.contains(&(3, 0)));
-    //     assert!(!day04.rolls.contains(&(0, 0)));
-    //     assert!(!day04.rolls.contains(&(1, 0)));
-    //     assert!(day04.rolls.contains(&(2, 1)));
-    // }
+
+    #[test]
+    fn test_day04_from_str() {
+        let day04: AdventOfCode2025Day04 = TEST_INPUT.parse().unwrap();
+
+        // Verify dimensions
+        assert_eq!(day04.width, 10);
+        assert_eq!(day04.height, 10);
+
+        // Helper to check the Vec<bool> grid
+        let is_set = |x: i32, y: i32| day04.rolls[(y * day04.width + x) as usize];
+
+        // Check specific characters from TEST_INPUT
+        // "..@@.@@@@." -> First line
+        assert!(!is_set(0, 0)); // '.'
+        assert!(!is_set(1, 0)); // '.'
+        assert!(is_set(2, 0));  // '@'
+        assert!(is_set(3, 0));  // '@'
+        assert!(!is_set(4, 0)); // '.'
+
+        // Check a bit of the second line "@@@.@.@.@@"
+        assert!(is_set(0, 1));  // '@'
+        assert!(is_set(1, 1));  // '@'
+        assert!(is_set(2, 1));  // '@'
+        assert!(!is_set(3, 1)); // '.'
+
+        // Verify active_coords contains the expected number of '@' symbols
+        // Count '@' in TEST_INPUT to be sure (it's 71)
+        let expected_count = TEST_INPUT.chars().filter(|&c| c == '@').count();
+        assert_eq!(day04.active_coords.len(), expected_count);
+
+        // Verify active_coords contains a known point
+        assert!(day04.active_coords.contains(&(2, 0)));
+    }
 
     #[test]
     fn test_day04_part01() {

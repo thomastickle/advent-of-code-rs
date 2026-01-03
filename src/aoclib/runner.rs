@@ -1,6 +1,5 @@
 use std::str::FromStr;
 
-
 pub trait Runner: FromStr {
     type Output: std::fmt::Display;
 
@@ -11,7 +10,6 @@ pub trait Runner: FromStr {
     }
 
     fn name(&self) -> (u32, u32);
-    fn parse(&self, input: &str) -> Self;
     fn part01(&self) -> Self::Output;
     fn part02(&self) -> Self::Output;
 
@@ -20,7 +18,9 @@ pub trait Runner: FromStr {
         let input_path = self.input_path();
         let input = std::fs::read_to_string(&input_path)
             .unwrap_or_else(|e| panic!("Failed to read input file {}: {}", input_path, e));
-        let parsed = self.parse(&input);
+        let parsed = Self::from_str(&input)
+            .map_err(|_| "Parse error".to_string())
+            .unwrap_or_else(|e| panic!("Failed to parse input: {}", e));
         let parse_duration = start_time.elapsed();
 
         let part1_result = parsed.part01();
@@ -44,9 +44,8 @@ pub trait AocDay {
     fn run_day(&self) -> String;
 }
 
-impl <T:Runner> AocDay for T {
+impl<T: Runner> AocDay for T {
     fn run_day(&self) -> String {
         self.run()
     }
-
 }

@@ -74,12 +74,6 @@ impl Runner for AdventOfCode2025Day03 {
         (2025, 03)
     }
 
-    fn parse(&self, input: &str) -> Self {
-        input
-            .parse::<AdventOfCode2025Day03>()
-            .unwrap_or_else(|e| panic!("Failed to parse input: {}", e))
-    }
-
     fn part01(&self) -> Self::Output {
         self.battery_packs.iter().map(|bp| bp.max_joltage(2)).sum::<u64>()
     }
@@ -130,17 +124,21 @@ mod tests {
     }
 
     #[test]
-    fn test_parse() {
-        let day03 = AdventOfCode2025Day03::default();
-        let parsed = day03.parse(TEST_INPUT);
-        assert_eq!(4, parsed.battery_packs.len());
-        assert_eq!(15, parsed.battery_packs[0].battery.len());
-    }
-
-    #[test]
     fn test_from_str() {
         let day03 = TEST_INPUT.parse::<AdventOfCode2025Day03>().unwrap();
         assert_eq!(4, day03.battery_packs.len());
         assert_eq!(15, day03.battery_packs[0].battery.len());
+    }
+
+    #[test]
+    fn test_part01() {
+        let day03 = TEST_INPUT.parse::<AdventOfCode2025Day03>().unwrap();
+        assert_eq!(357, day03.part01());
+    }
+
+    #[test]
+    fn test_part02() {
+        let day03 = TEST_INPUT.parse::<AdventOfCode2025Day03>().unwrap();
+        assert_eq!(3121910778619, day03.part02());
     }
 }

@@ -50,12 +50,6 @@ impl Runner for AdventOfCode2025Day01 {
         (2025, 1)
     }
 
-    fn parse(&self, input: &str) -> Self {
-        input
-            .parse::<AdventOfCode2025Day01>()
-            .unwrap_or_else(|e| panic!("Failed to parse input: {}", e))
-    }
-
     fn part01(&self) -> i32 {
         self.directions
             .iter()
@@ -115,13 +109,6 @@ L82";
     fn direction() {
         let direction = Direction::Left(1);
         assert_eq!(direction, Direction::Left(1))
-    }
-
-    #[test]
-    fn test_parse() {
-        let day01 = AdventOfCode2025Day01::default();
-        let parsed = day01.parse(TEST_INPUT);
-        assert_eq!(10, parsed.directions.len());
     }
 
     #[test]

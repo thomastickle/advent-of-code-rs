@@ -1,6 +1,4 @@
 use crate::aoclib::runner::Runner;
-use rayon::prelude::*;
-use std::collections::HashSet;
 use std::str::FromStr;
 
 #[derive(Debug, Clone)]
@@ -35,7 +33,7 @@ impl FreshIngredientRange {
 #[derive(Debug, Default)]
 pub struct AdventOfCode2025Day05 {
     fresh_ingredient_ranges: Vec<FreshIngredientRange>,
-    ingredients: HashSet<u64>,
+    ingredients: Vec<u64>,
 }
 
 impl AdventOfCode2025Day05 {
@@ -70,7 +68,7 @@ impl FromStr for AdventOfCode2025Day05 {
     type Err = String;
     fn from_str(_s: &str) -> Result<Self, Self::Err> {
         let mut fresh_ingredient_ranges = Vec::new();
-        let mut ingredients = HashSet::new();
+        let mut ingredients = Vec::new();
         let mut blank_line_seen = false;
         for line in _s.lines() {
             let line = line.trim();
@@ -86,7 +84,7 @@ impl FromStr for AdventOfCode2025Day05 {
                 let ingredient = line
                     .parse::<u64>()
                     .map_err(|_| "Invalid ingredient value".to_string())?;
-                ingredients.insert(ingredient);
+                ingredients.push(ingredient);
             }
         }
 
@@ -108,7 +106,7 @@ impl Runner for AdventOfCode2025Day05 {
 
     fn part01(&self) -> Self::Output {
         self.ingredients
-            .par_iter()
+            .iter()
             .filter(|&&ingredient| {
                 // Binary search for a range that might contain the ingredient
                 self.fresh_ingredient_ranges
@@ -126,8 +124,9 @@ impl Runner for AdventOfCode2025Day05 {
             .count() as u64
     }
 
+    /// Sum up all the fresh ingredient ranges to get the total number of
+    /// fresh ingredients.
     fn part02(&self) -> Self::Output {
-        // Sum the sizes of disjoint ranges
         self.fresh_ingredient_ranges
             .iter()
             .map(|r| r.end - r.start + 1)

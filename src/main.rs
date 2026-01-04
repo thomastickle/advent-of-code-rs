@@ -9,6 +9,7 @@ fn main() {
         Box::new(aoc2025::day02::AdventOfCode2025Day02::default()),
         Box::new(aoc2025::day03::AdventOfCode2025Day03::default()),
         Box::new(aoc2025::day04::AdventOfCode2025Day04::default()),
+        Box::new(aoc2025::day05::AdventOfCode2025Day05::default()),
     ];
 
     for day in days {

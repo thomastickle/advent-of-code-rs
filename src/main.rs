@@ -1,7 +1,5 @@
-use aoclib::runner::AocDay;
-
-mod aoclib;
-mod aoc2025;
+use adventofcode_rs::aoc2025;
+use adventofcode_rs::aoclib::runner::AocDay;
 
 fn main() {
     let days: Vec<Box<dyn AocDay>> = vec![

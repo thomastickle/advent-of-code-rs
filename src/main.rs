@@ -1,4 +1,4 @@
-use crate::aoclib::runner::AocDay;
+use aoclib::runner::AocDay;
 
 mod aoclib;
 mod aoc2025;
@@ -10,6 +10,7 @@ fn main() {
         Box::new(aoc2025::day03::AdventOfCode2025Day03::default()),
         Box::new(aoc2025::day04::AdventOfCode2025Day04::default()),
         Box::new(aoc2025::day05::AdventOfCode2025Day05::default()),
+        Box::new(aoc2025::day06::AdventOfCode2025Day06::default()),
     ];
 
     for day in days {

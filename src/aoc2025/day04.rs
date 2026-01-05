@@ -32,12 +32,15 @@ impl AdventOfCode2025Day04 {
                     let nx = x + dx;
                     let ny = y + dy;
 
-                    if nx >= 0 && nx < self.width && ny >= 0 && ny < self.height {
-                        if self.rolls[(ny * self.width + nx) as usize] {
-                            neighbor_count += 1;
-                            if neighbor_count >= Self::MAX_NEIGHBORS {
-                                return false;
-                            }
+                    if nx >= 0
+                        && nx < self.width
+                        && ny >= 0
+                        && ny < self.height
+                        && self.rolls[(ny * self.width + nx) as usize]
+                    {
+                        neighbor_count += 1;
+                        if neighbor_count >= Self::MAX_NEIGHBORS {
+                            return false;
                         }
                     }
                 }
@@ -46,7 +49,7 @@ impl AdventOfCode2025Day04 {
             .count() as i32
     }
 
-    fn remove_rolls(grid: &mut Vec<bool>, width: i32, height: i32, active: &[(i32, i32)]) -> i32 {
+    fn remove_rolls(grid: &mut [bool], width: i32, height: i32, active: &[(i32, i32)]) -> i32 {
         let mut removed_count = 0;
         let mut to_check: Vec<(i32, i32)> = active.to_vec();
         // Track which cells are already in the next queue to avoid duplicates
@@ -66,12 +69,15 @@ impl AdventOfCode2025Day04 {
                 for (dx, dy) in Self::DIRECTIONS.iter() {
                     let nx = x + dx;
                     let ny = y + dy;
-                    if nx >= 0 && nx < width && ny >= 0 && ny < height {
-                        if grid[(ny * width + nx) as usize] {
-                            neighbor_count += 1;
-                            if neighbor_count >= Self::MAX_NEIGHBORS {
-                                break;
-                            }
+                    if nx >= 0
+                        && nx < width
+                        && ny >= 0
+                        && ny < height
+                        && grid[(ny * width + nx) as usize]
+                    {
+                        neighbor_count += 1;
+                        if neighbor_count >= Self::MAX_NEIGHBORS {
+                            break;
                         }
                     }
                 }
@@ -147,7 +153,7 @@ impl Runner for AdventOfCode2025Day04 {
     type Output = i32;
 
     fn name(&self) -> (u32, u32) {
-        (2025, 04)
+        (2025, 4)
     }
 
     fn part01(&self) -> Self::Output {

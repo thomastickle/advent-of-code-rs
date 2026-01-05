@@ -71,7 +71,7 @@ impl Runner for AdventOfCode2025Day03 {
     type Output = u64;
 
     fn name(&self) -> (u32, u32) {
-        (2025, 03)
+        (2025, 3)
     }
 
     fn part01(&self) -> Self::Output {
@@ -120,7 +120,7 @@ mod tests {
     #[test]
     fn test_name() {
         let x = AdventOfCode2025Day03::default().name();
-        assert_eq!((2025, 03), x);
+        assert_eq!((2025, 3), x);
     }
 
     #[test]

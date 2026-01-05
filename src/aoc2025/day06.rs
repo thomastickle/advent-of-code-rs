@@ -131,7 +131,7 @@ impl FromStr for AdventOfCode2025Day06 {
                             line[start..idx - 1]
                                 .chars()
                                 .map(|c| {
-                                    if c.is_digit(10) {
+                                    if c.is_ascii_digit() {
                                         c.to_digit(10).unwrap() as u8
                                     } else {
                                         0
@@ -164,7 +164,7 @@ impl FromStr for AdventOfCode2025Day06 {
                 line[start..]
                     .chars()
                     .map(|c| {
-                        if c.is_digit(10) {
+                        if c.is_ascii_digit() {
                             c.to_digit(10).unwrap() as u8
                         } else {
                             0
@@ -188,7 +188,7 @@ impl Runner for AdventOfCode2025Day06 {
     type Output = i64;
 
     fn name(&self) -> (u32, u32) {
-        (2025, 06)
+        (2025, 6)
     }
 
     fn part01(&self) -> Self::Output {

@@ -46,7 +46,8 @@ impl Range {
 
             // Calculate the minimum bound on the prefix that we would find dupes.
             let min_prefix = 10u64.pow(number_length - 1);
-            let start_prefix = min_prefix.max((self.start + multiplier - 1) / multiplier);
+
+            let start_prefix = min_prefix.max(self.start.div_ceil( multiplier));
             let end_prefix = 10u64.pow(number_length) - 1;
 
             for prefix in start_prefix..=end_prefix {
@@ -111,7 +112,7 @@ impl Range {
                 }
 
                 // Calculate the first prefix p such that p * multiplier >= self.start
-                let start_prefix = min_p.max((self.start + multiplier - 1) / multiplier);
+                let start_prefix = min_p.max(self.start.div_ceil(multiplier));
 
                 for p in start_prefix..=max_p {
                     let val = match p.checked_mul(multiplier) {

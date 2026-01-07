@@ -7,6 +7,9 @@ edition = "2024"
 [dev-dependencies]
 criterion = { version = "0.8.1", features = ["html_reports"] }
 
+[dependencies]
+itertools = "0.14.0"
+
 [[bench]]
 name = "aoc_benchmarks"
 harness = false

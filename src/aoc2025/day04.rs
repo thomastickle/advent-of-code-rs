@@ -177,16 +177,7 @@ pub mod tests {
     use crate::aoc2025::day04::AdventOfCode2025Day04;
     use crate::aoclib::runner::Runner;
 
-    const TEST_INPUT: &str = "..@@.@@@@.\n\
-        @@@.@.@.@@\n\
-        @@@@@.@.@@\n\
-        @.@@@@..@.\n\
-        @@.@@@@.@@\n\
-        .@@@@@@@.@\n\
-        .@.@.@.@@@\n\
-        @.@@@.@@@@\n\
-        .@@@@@@@@.\n\
-        @.@.@@@.@.\n";
+    const TEST_INPUT: &str = include_str!("../../input/test/day04.input");
 
     #[test]
     fn test_day04_from_str() {

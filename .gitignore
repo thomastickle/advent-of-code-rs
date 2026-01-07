@@ -1,6 +1,6 @@
 ### AOC Specific Files
 # Input Files
-*.input
+input/problem/*.input
 
 
 

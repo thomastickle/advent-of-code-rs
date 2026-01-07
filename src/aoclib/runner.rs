@@ -6,7 +6,7 @@ pub trait Runner: FromStr {
     /// Get the expected input path for the input file of a particular Runner.
     fn input_path(&self) -> String {
         let (_, day) = self.name();
-        format!("input/day{:02}.input", day)
+        format!("input/problem/day{:02}.input", day)
     }
 
     fn name(&self) -> (u32, u32);

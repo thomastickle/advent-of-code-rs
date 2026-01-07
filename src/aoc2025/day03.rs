@@ -90,10 +90,7 @@ mod tests {
     use crate::aoclib::runner::Runner;
     use std::str::FromStr;
 
-    const TEST_INPUT: &str = "987654321111111\n\
-                              811111111111119\n\
-                              234234234234278\n\
-                              818181911112111";
+    const TEST_INPUT: &str = include_str!("../../input/test/day03.input");
 
     #[test]
     fn test_battery_pack_from_str() {

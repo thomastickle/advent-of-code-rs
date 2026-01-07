@@ -139,17 +139,7 @@ mod tests {
     use crate::aoc2025::day05::AdventOfCode2025Day05;
     use crate::aoclib::runner::Runner;
 
-    const TEST_INPUT: &str = "3-5\n\
-        10-14\n\
-        16-20\n\
-        12-18\n\
-        \n\
-        1\n\
-        5\n\
-        8\n\
-        11\n\
-        17\n\
-        32\n";
+    const TEST_INPUT: &str = include_str!("../../input/test/day05.input");
 
     #[test]
     fn test_name() {

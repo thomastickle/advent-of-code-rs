@@ -6,3 +6,4 @@ pub mod day05;
 pub mod day06;
 
 pub mod day09;
+mod day07;

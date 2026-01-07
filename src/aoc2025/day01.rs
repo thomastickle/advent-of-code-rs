@@ -94,16 +94,7 @@ mod tests {
     use crate::aoc2025::day01::{AdventOfCode2025Day01, Direction};
     use crate::aoclib::runner::Runner;
 
-    const TEST_INPUT: &str = "L68
-L30
-R48
-L5
-R60
-L55
-L1
-L99
-R14
-L82";
+    const TEST_INPUT: &str = include_str!("../../input/test/day01.input");
 
     #[test]
     fn direction() {

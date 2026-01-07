@@ -52,14 +52,7 @@ mod tests {
     use crate::aoclib::runner::Runner;
     use std::str::FromStr;
 
-    const TEST_INPUT: &str = "7,1
-11,1
-11,7
-9,7
-9,5
-2,5
-2,3
-7,3";
+    const TEST_INPUT: &str = include_str!("../../input/test/day09.input");
 
     #[test]
     fn test_name() {

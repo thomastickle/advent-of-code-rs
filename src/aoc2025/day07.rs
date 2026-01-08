@@ -1,5 +1,4 @@
 use crate::aoclib::runner::Runner;
-use std::collections::HashSet;
 use std::str::FromStr;
 
 // #[derive(Debug)]
@@ -55,26 +54,22 @@ impl Runner for AdventOfCode2025Day07 {
 
     fn part01(&self) -> Self::Output {
         let mut split_count = 0;
-        let mut beams = HashSet::new();
-        beams.insert(self.start.0);
+        let mut beams = vec![false; self.grid_width];
+        beams[self.start.0] = true;
 
-        for row in (0..self.grid_height).step_by(2) {
-            let mut next_beams = HashSet::new();
-            for beam in &beams {
-                let coord = (*beam, row);
-                if self.splitters.contains(&coord) {
-                    split_count += 1;
-                    next_beams.insert(*beam + 1);
-                    next_beams.insert(*beam - 1);
-                } else {
-                    next_beams.insert(*beam);
-                }
+        for splitter in &self.splitters {
+            if beams[splitter.0] {
+                split_count += 1;
+                beams[splitter.0] = false;
+                beams[splitter.0 - 1] = true;
+                beams[splitter.0 + 1] = true;
             }
-            beams = next_beams;
         }
 
         split_count
     }
+    
+
 
     fn part02(&self) -> Self::Output {
         0

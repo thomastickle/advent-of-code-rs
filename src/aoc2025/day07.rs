@@ -58,7 +58,7 @@ impl Runner for AdventOfCode2025Day07 {
         let mut beams = HashSet::new();
         beams.insert(self.start.0);
 
-        for row in 0..self.grid_height {
+        for row in (0..self.grid_height).step_by(2) {
             let mut next_beams = HashSet::new();
             for beam in &beams {
                 let coord = (*beam, row);

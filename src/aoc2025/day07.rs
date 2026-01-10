@@ -52,6 +52,10 @@ impl Runner for AdventOfCode2025Day07 {
         (2025, 7)
     }
 
+    /// Get the number of times the tachyon beam splits on the way to the end
+    /// of the tachyon manifold.
+    /// 
+    /// Fast implementation using bitmap to keep track of beam locations.
     fn part01(&self) -> Self::Output {
         let mut split_count = 0;
         let mut beams = vec![false; self.grid_width];
@@ -72,7 +76,7 @@ impl Runner for AdventOfCode2025Day07 {
 
 
     fn part02(&self) -> Self::Output {
-        0
+       0 //todo!("Not implemented yet.")
     }
 }
 
@@ -103,5 +107,8 @@ mod tests {
     }
 
     #[test]
-    fn test_part02() {}
+    fn test_part02() {
+        let day07 = TEST_INPUT.parse::<AdventOfCode2025Day07>().unwrap();
+        assert_eq!(day07.part02(), 40);
+    }
 }

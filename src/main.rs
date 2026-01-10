@@ -10,6 +10,7 @@ fn main() {
         Box::new(aoc2025::day05::AdventOfCode2025Day05::default()),
         Box::new(aoc2025::day06::AdventOfCode2025Day06::default()),
         Box::new(aoc2025::day07::AdventOfCode2025Day07::default()),
+        Box::new(aoc2025::day08::AdventOfCode2025Day08::default()),
         Box::new(aoc2025::day09::AdventOfCode2025Day09::default()),
     ];
 

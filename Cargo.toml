@@ -11,6 +11,7 @@ criterion = { version = "0.8.1", features = ["html_reports"] }
 disjoint-sets = "0.4.2"
 glam = "0.30.10"
 itertools = "0.14.0"
+rayon = "1.11.0"
 
 
 [[bench]]

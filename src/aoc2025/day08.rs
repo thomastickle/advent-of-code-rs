@@ -4,6 +4,7 @@ use std::collections::HashSet;
 use disjoint_sets::UnionFind;
 use glam::I64Vec3;
 use itertools::Itertools;
+use rayon::prelude::*;
 use std::str::FromStr;
 
 type JunctionBox = I64Vec3;
@@ -116,16 +117,19 @@ fn distance(a: &JunctionBox, b: &JunctionBox) -> i64 {
 /// Calculate all pairwise distances between junction boxes
 ///
 fn asc_pair_distances(junction_boxes: &Vec<JunctionBox>) -> Vec<(i64, usize, usize)> {
-    junction_boxes
-        .iter()
-        .enumerate()
-        .tuple_combinations()
-        .map(|((idx_a, a), (idx_b, b))| {
-            let distance = distance(a, b);
-            (distance, idx_a, idx_b)
+    let n = junction_boxes.len();
+    let mut pairs: Vec<(i64, usize, usize)> = (0..n)
+        .into_par_iter()
+        .flat_map(|idx_a| {
+            (idx_a + 1..n).into_par_iter().map(move |idx_b| {
+                let distance = distance(&junction_boxes[idx_a], &junction_boxes[idx_b]);
+                (distance, idx_a, idx_b)
+            })
         })
-        .sorted_by_key(|&(distance, _, _)| distance)
-        .collect::<Vec<_>>()
+        .collect();
+
+    pairs.par_sort_unstable_by_key(|&(d, _, _)| d); // Parallel sort
+    pairs
 }
 
 #[cfg(test)]

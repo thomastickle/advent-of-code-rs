@@ -16,6 +16,32 @@ pub struct AdventOfCode2025Day07 {
     splitters: Vec<(usize, usize)>,
 }
 
+impl AdventOfCode2025Day07 {
+    
+    /// Finds the number of times a beam splits along with the number
+    /// of different timelines thus solving both part 1 and part 2 at the same time.
+    /// We exploit a count tracking map to both keep it fast and keep track of timelines.
+    fn splits_timelines(&self) -> (u64, u64) {
+        let mut split_count = 0;
+        let mut beams = vec![0; self.grid_width];
+        beams[self.start.0] = 1;
+        
+
+        for splitter in &self.splitters {
+            let count = beams[splitter.0];
+            if count > 0 {
+                split_count += 1;
+                beams[splitter.0] = 0;
+                beams[splitter.0 - 1] += count;
+                beams[splitter.0 + 1] += count;
+            }
+        }
+        let count = beams.iter().sum();
+
+        (split_count, count)
+    }
+}
+
 impl FromStr for AdventOfCode2025Day07 {
     type Err = String;
 
@@ -46,7 +72,7 @@ impl FromStr for AdventOfCode2025Day07 {
 }
 
 impl Runner for AdventOfCode2025Day07 {
-    type Output = u32;
+    type Output = u64;
 
     fn name(&self) -> (u32, u32) {
         (2025, 7)
@@ -54,29 +80,14 @@ impl Runner for AdventOfCode2025Day07 {
 
     /// Get the number of times the tachyon beam splits on the way to the end
     /// of the tachyon manifold.
-    /// 
+    ///
     /// Fast implementation using bitmap to keep track of beam locations.
     fn part01(&self) -> Self::Output {
-        let mut split_count = 0;
-        let mut beams = vec![false; self.grid_width];
-        beams[self.start.0] = true;
-
-        for splitter in &self.splitters {
-            if beams[splitter.0] {
-                split_count += 1;
-                beams[splitter.0] = false;
-                beams[splitter.0 - 1] = true;
-                beams[splitter.0 + 1] = true;
-            }
-        }
-
-        split_count
+        self.splits_timelines().0
     }
-    
-
 
     fn part02(&self) -> Self::Output {
-       0 //todo!("Not implemented yet.")
+        self.splits_timelines().1
     }
 }
 

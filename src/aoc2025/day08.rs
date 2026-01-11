@@ -7,6 +7,9 @@ use itertools::Itertools;
 use rayon::prelude::*;
 use std::str::FromStr;
 
+// TODO: Revisit this one to see about making it faster / maybe cleaner as it is ugly and slower
+// TODO: than I would like.
+
 type JunctionBox = I64Vec3;
 
 #[derive(Debug, Default)]

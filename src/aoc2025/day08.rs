@@ -119,7 +119,7 @@ fn distance(a: &JunctionBox, b: &JunctionBox) -> i64 {
 
 /// Calculate all pairwise distances between junction boxes
 ///
-fn asc_pair_distances(junction_boxes: &Vec<JunctionBox>) -> Vec<(i64, usize, usize)> {
+fn asc_pair_distances(junction_boxes: &[JunctionBox]) -> Vec<(i64, usize, usize)> {
     let n = junction_boxes.len();
     let mut pairs: Vec<(i64, usize, usize)> = (0..n)
         .into_par_iter()
